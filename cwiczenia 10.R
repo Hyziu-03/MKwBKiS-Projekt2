@@ -114,7 +114,7 @@ for (i in seq(1,n_id)) {
 
   print(i)
 
-  logic<-list_inst2[[i]]$current$values$name=="PM25" #zmienna logiczna do wyszukania pól o nazwie "PM25"
+  logic<-list_inst2[[i]]$current$values$name=="TEMPERATURE" #zmienna logiczna do wyszukania pól o nazwie "TEMPERATURE"
 
   if (sum(logic)==1) #testujemy, czy istnieje jedno i tylko jedno takie pole (zdarzają się błędne odczyty - tych nie chcemy zapisać)
     current[i]<-list_inst2[[i]]$current$values[logic,2]
@@ -123,7 +123,7 @@ for (i in seq(1,n_id)) {
 
 #####!!!wyjaśnienie co robi powyższa pętla!!!#####
 i<-2
-logic<-list_inst2[[i]]$current$values$name=="PM25"
+logic<-list_inst2[[i]]$current$values$name=="TEMPERATURE"
 logic
 # [1] FALSE  TRUE FALSE FALSE FALSE FALSE
 list_inst2[[i]]$current$values
@@ -222,6 +222,4 @@ PM25_auto <- autoKrige(current ~ 1, input_data = data15_spdf[!miss,],new_data=sp
 plot(PM25_auto$krige_output[1],main="PM 2.5")
 points(data15_ppp_id[!miss,],pch="*",col="White")
 plot(PM25_auto)
-
-
 
