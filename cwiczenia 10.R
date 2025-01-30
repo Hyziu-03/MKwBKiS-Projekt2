@@ -114,7 +114,7 @@ for (i in seq(1,n_id)) {
 
   print(i)
 
-  logic<-list_inst2[[i]]$current$values$name=="TEMPERATURE" #zmienna logiczna do wyszukania pól o nazwie "TEMPERATURE"
+  logic<-list_inst2[[i]]$current$values$name=="HUMIDITY" #zmienna logiczna do wyszukania pól o nazwie "HUMIDITY"
 
   if (sum(logic)==1) #testujemy, czy istnieje jedno i tylko jedno takie pole (zdarzają się błędne odczyty - tych nie chcemy zapisać)
     current[i]<-list_inst2[[i]]$current$values[logic,2]
@@ -123,7 +123,7 @@ for (i in seq(1,n_id)) {
 
 #####!!!wyjaśnienie co robi powyższa pętla!!!#####
 i<-2
-logic<-list_inst2[[i]]$current$values$name=="TEMPERATURE"
+logic<-list_inst2[[i]]$current$values$name=="HUMIDITY"
 logic
 # [1] FALSE  TRUE FALSE FALSE FALSE FALSE
 list_inst2[[i]]$current$values
@@ -152,7 +152,7 @@ coordinates(data15_spdf) <- ~x+y # koordynaty
 proj4string(data15_spdf) <- CRS("+proj=utm +zone=34 +datum=WGS84") # układ odniesienia
 # dodajemy kolumnę current
 data15_spdf$current<-current
-dev.off() #bo RStudio może wariować ;)
+# dev.off() #bo RStudio może wariować ;)
 plot(data15_spdf)
 
 #zobaczmy jeszcze raz nasze dane z czujników
@@ -162,7 +162,7 @@ miss <- is.na(data15_spdf$current)
 
 #teraz już mozemy wykonać mapę
 pm25_auto <- autoKrige(current ~ 1, input_data = data15_spdf[!miss,])
-plot(pm25_auto$krige_output[1],main="PM 2.5")
+plot(pm25_auto$krige_output[1],main="HUMIDITY")
 points(data15_ppp_id[!miss,],pch="*",col="White")
 plot(Window(data15_ppp_id),add=TRUE)
 
@@ -172,14 +172,14 @@ plot(pm25_auto)
 
 #zmieńmy model i porównajmy wyniki, popatrzmy na wariogram
 pm25_auto <- autoKrige(current ~ 1, input_data = data15_spdf[!miss,], model="Gau")
-plot(pm25_auto$krige_output[1],main="PM 2.5")
+plot(pm25_auto$krige_output[1],main="HUMIDITY")
 points(data15_ppp_id[!miss,],pch="*",col="White")
 plot(Window(data15_ppp_id),add=TRUE)
 plot(pm25_auto)
 
 
 ############ ŁADNA MAPA############
-dev.off()
+# dev.off()
 #i kriging na wypasie, jeszcze raz to co już było tylko "marks" jest zmienione na "current"
 #zarys krakowa w odpowiednim formacie
 bound<-st_as_sf(krakowUTM)
@@ -211,7 +211,7 @@ plot(spgrid)
 #kriging i mapa
 ##tu uwaga na current zamiast marks!
 PM25_auto <- autoKrige(current ~ 1, input_data = data15_spdf[!miss,],new_data=spgrid)
-plot(PM25_auto$krige_output[1],main="PM 2.5")
+plot(PM25_auto$krige_output[1],main="HUMIDITY")
 points(data15_ppp_id[!miss,],pch="*",col="White")
 
 #Zobaczmy też błędy i semiwariongram
@@ -219,7 +219,7 @@ plot(PM25_auto)
 
 ###poeksperymentujmy z innymi metodami:
 PM25_auto <- autoKrige(current ~ 1, input_data = data15_spdf[!miss,],new_data=spgrid, model="Exp")
-plot(PM25_auto$krige_output[1],main="PM 2.5")
+plot(PM25_auto$krige_output[1],main="HUMIDITY")
 points(data15_ppp_id[!miss,],pch="*",col="White")
 plot(PM25_auto)
 
